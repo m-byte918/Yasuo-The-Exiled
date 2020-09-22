@@ -4,15 +4,15 @@ using UnityEngine.UI;
 public class Abilities : MonoBehaviour {
     [Header("Q Ability")]
     public Image qAbilityImage;
-    public float qCooldown = 0f;
+    public float qCooldown = 2f;
 
-    [Header("W Ability")]
+    /*[Header("W Ability")]
     public Image wAbilityImage;
-    public float wCooldown = 0f;
+    public float wCooldown = 0f;*/
 
     [Header("E Ability")]
     public Image eAbilityImage;
-    public float eCooldown = .5f;
+    public float eCooldown = 0.5f;
 
     [Header("R Ability")]
     public Image rAbilityImage;
@@ -20,7 +20,7 @@ public class Abilities : MonoBehaviour {
 
     void Start() {
         qAbilityImage.fillAmount = 0;
-        wAbilityImage.fillAmount = 0;
+        //wAbilityImage.fillAmount = 0;
         eAbilityImage.fillAmount = 0;
         rAbilityImage.fillAmount = 0;
     }
@@ -28,7 +28,7 @@ public class Abilities : MonoBehaviour {
     // Update all abilities
     void Update() {
         qAbility();
-        wAbility();
+        //wAbility();
         eAbility();
         rAbility();
     }
@@ -46,7 +46,7 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    void wAbility() {
+    /*void wAbility() {
         if (Input.GetKey(KeyCode.W) && wAbilityImage.fillAmount == 0) {
             wAbilityImage.fillAmount = 1; // Cooldown started
             return;
@@ -57,7 +57,7 @@ public class Abilities : MonoBehaviour {
             if (wAbilityImage.fillAmount <= 0)
                 wAbilityImage.fillAmount = 0; // Cooldown finished
         }
-    }
+    }*/
 
     void eAbility() {
         if (Input.GetKey(KeyCode.E) && eAbilityImage.fillAmount == 0) {
