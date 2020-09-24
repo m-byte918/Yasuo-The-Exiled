@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Abilities : MonoBehaviour {
     [Header("Q Ability")]
     public Image qAbilityImage;
-    public float qCooldown = 2f;
+    public float qCooldown;
 
     /*[Header("W Ability")]
     public Image wAbilityImage;
@@ -12,11 +12,11 @@ public class Abilities : MonoBehaviour {
 
     [Header("E Ability")]
     public Image eAbilityImage;
-    public float eCooldown = 0.5f;
+    public float eCooldown;
 
     [Header("R Ability")]
     public Image rAbilityImage;
-    public float rCooldown = 30f;
+    public float rCooldown;
 
     void Start() {
         qAbilityImage.fillAmount = 0;
