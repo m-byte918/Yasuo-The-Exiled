@@ -1,24 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CameraScroll : MonoBehaviour
-{
+public class CameraScroll : MonoBehaviour {
     public Camera cam;
     public float zoomSpeed;
 
     private float camFOV;
     private float mouseScrollInput;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         camFOV = cam.fieldOfView;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         mouseScrollInput = Input.GetAxis("Mouse ScrollWheel");
 
         camFOV -= mouseScrollInput * zoomSpeed;
