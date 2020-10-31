@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Abilities : MonoBehaviour {
@@ -21,25 +20,31 @@ public class Abilities : MonoBehaviour {
     public Transform player;
 
     [Header("Q Ability")]
-    public float qRange;
-    public float qMaxRange;
-    public float qCooldown;
+    public float qRange = .002f;
+    public float qLastRange = .004f;
+    public float qCooldown = 2f;
+    public float qStackCooldown = 4f;
     public Image qAbilityImg;
 
+    private int qStackCounter = 0;
+    private float lastQTime = 0f;
+
     [Header("E Ability")]
-    public float eRange;
-    public float eCooldown;
+    public float eRangeX = .002f;
+    public float eRangeZ = 1f;
+    public float eCooldown = 0.5f;
     public Image eAbilityImg;
 
     [Header("R Ability")]
-    public float rRange;
-    public float rCooldown;
+    public float rRangeX = .004f;
+    public float rRangeZ = 2f;
+    public float rCooldown = 30f;
     public Image rAbilityImg;
 
     void Start() {
-        qAbilityImg.fillAmount = 0;
-        eAbilityImg.fillAmount = 0;
-        rAbilityImg.fillAmount = 0;
+        qAbilityImg.fillAmount = 0f;
+        eAbilityImg.fillAmount = 0f;
+        rAbilityImg.fillAmount = 0f;
 
         arrowIndicatorCanvas.enabled = false;
         circleIndicatorCanvas.enabled = false;
@@ -60,62 +65,73 @@ public class Abilities : MonoBehaviour {
         pos = Input.mousePosition - pos;
         float angle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
 
+        if (qStackCounter == 2) {
+            // Whirlwind --> double the range
+            arrowIndicatorCanvas.transform.localScale = new Vector3(qLastRange, .002f, 1f);
+        } else {
+            // Normal
+            arrowIndicatorCanvas.transform.localScale = new Vector3(qRange, .002f, 1f);
+        }
         arrowIndicatorCanvas.transform.rotation = Quaternion.Euler(0f, 100f - angle, 0f);
     }
 
     void qAbility() {
-        if (qAbilityImg.fillAmount == 0) {
-            if (Input.GetKeyUp(KeyCode.Q)) {
-                // Q is no longer being pressed, start the cooldown.
-                qAbilityImg.fillAmount = 1;
-                arrowIndicatorCanvas.enabled = false;
-            } else if (Input.GetKey(KeyCode.Q)) {
-                // Q is being held down, move the arrow indicator but do not start the cooldown
-                arrowIndicatorCanvas.enabled = true;
-                moveArrowIndicator();
+        lastQTime += Time.deltaTime;
+        if (fillImage(qAbilityImg, qCooldown)) {
+            return;
+        }
+        if (Input.GetKeyUp(KeyCode.Q)) {
+            // Q is no longer being pressed, start the cooldown.
+            qAbilityImg.fillAmount = 1f;
+            arrowIndicatorCanvas.enabled = false;
+
+            if (qStackCounter == 0 || lastQTime % 60f < qStackCooldown) {
+                // Only stack if last Q time was less than 6 seconds
+                if (++qStackCounter > 3)
+                    qStackCounter = 0; // Max 3 stacks
+            } else {
+                // Otherwise, reset
+                qStackCounter = 0;
             }
-        } else {
-            qAbilityImg.fillAmount -= 1 / qCooldown * Time.deltaTime;
-            if (qAbilityImg.fillAmount <= 0)
-                qAbilityImg.fillAmount = 0; // Cooldown finished
+            lastQTime = 0;
+        } else if (Input.GetKey(KeyCode.Q)) {
+            // Q is being held down, move the arrow indicator but do not start the cooldown
+            arrowIndicatorCanvas.enabled = true;
+            moveArrowIndicator();
         }
     }
 
     void eAbility() {
-        if (eAbilityImg.fillAmount == 0) {
-            if (Input.GetKeyUp(KeyCode.E)) {
-                // E is no longer being pressed, start the cooldown.
-                eAbilityImg.fillAmount = 1;
-                circleIndicatorCanvas.enabled = false;
-            } else if (Input.GetKey(KeyCode.E)) {
-                // E is being held down
-                circleIndicatorCanvas.transform.localScale = new Vector3(0.002f, 0.002f, 1f);
-                circleIndicatorCanvas.enabled = true;
-                arrowIndicatorCanvas.enabled = false;
-            }
-        } else {
-            eAbilityImg.fillAmount -= 1 / eCooldown * Time.deltaTime;
-            if (eAbilityImg.fillAmount <= 0)
-                eAbilityImg.fillAmount = 0; // Cooldown finished
-        }
+        if (!fillImage(eAbilityImg, eCooldown))
+            updateCircleAbility(KeyCode.E, eAbilityImg, eRangeX, eRangeZ);
     }
 
     void rAbility() {
-        if (rAbilityImg.fillAmount == 0) {
-            if (Input.GetKeyUp(KeyCode.R)) {
-                // R is no longer being pressed, start the cooldown.
-                rAbilityImg.fillAmount = 1;
-                circleIndicatorCanvas.enabled = false;
-            } else if (Input.GetKey(KeyCode.R)) {
-                // R is being held down
-                circleIndicatorCanvas.transform.localScale = new Vector3(0.004f, 0.002f, 2f);
-                circleIndicatorCanvas.enabled = true;
-                arrowIndicatorCanvas.enabled = false;
-            }
-        } else {
-            rAbilityImg.fillAmount -= 1 / rCooldown * Time.deltaTime;
-            if (rAbilityImg.fillAmount <= 0)
-                rAbilityImg.fillAmount = 0; // Cooldown finished
+        if (!fillImage(rAbilityImg, rCooldown))
+            updateCircleAbility(KeyCode.R, rAbilityImg, rRangeX, rRangeZ);
+    }
+
+    void updateCircleAbility(KeyCode code, Image abilityImg, float rx, float rz) {
+        if (Input.GetKeyUp(code)) {
+            // Key is no longer being pressed, start the cooldown.
+            abilityImg.fillAmount = 1f;
+            circleIndicatorCanvas.enabled = false;
+        } else if (Input.GetKey(code)) {
+            // Key is being held down
+            circleIndicatorCanvas.transform.localScale = new Vector3(rx, .002f, rz);
+            circleIndicatorCanvas.enabled = true;
+            arrowIndicatorCanvas.enabled = false;
         }
+    }
+
+    bool fillImage(Image abilityImg, float cooldown) {
+        if (abilityImg.fillAmount == 0f) {
+            return false;
+        }
+        abilityImg.fillAmount -= Time.deltaTime / cooldown;
+        if (abilityImg.fillAmount <= 0f) {
+            abilityImg.fillAmount = 0f; // Cooldown finished
+        }
+        return true;
     }
 }

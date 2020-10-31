@@ -1443,13 +1443,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 612231946}
-  m_LocalRotation: {x: 0.35372, y: -0.57015955, z: 0.29680628, w: 0.6794898}
-  m_LocalPosition: {x: 277.274, y: 12.044, z: 192.69}
+  m_LocalRotation: {x: 0.40611592, y: -0.5341064, z: 0.3598097, w: 0.6483342}
+  m_LocalPosition: {x: 277.34, y: 17.1, z: 192.69}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 55, y: -80, z: 0}
+  m_LocalEulerAnglesHint: {x: 65.637, y: -76.028, z: 4.552}
 --- !u!114 &612231951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1784,7 +1784,7 @@ RectTransform:
   m_GameObject: {fileID: 908793704}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -0.009}
-  m_LocalScale: {x: 40.87303, y: 0.018330036, z: 0}
+  m_LocalScale: {x: 40, y: 0.018330036, z: 0}
   m_Children: []
   m_Father: {fileID: 141873465}
   m_RootOrder: 0
@@ -2002,19 +2002,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7142a5d383bc1fb49aad8e1b42a57cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowIndicatorImg: {fileID: 908793706}
-  circleIndicatorImg: {fileID: 1005094204}
   arrowIndicatorCanvas: {fileID: 141873468}
   circleIndicatorCanvas: {fileID: 1939361844}
   player: {fileID: 913041198}
-  qRange: 0
-  qMaxRange: 0
+  qRange: 0.002
+  qLastRange: 0.004
   qCooldown: 2
+  qStackCooldown: 4
   qAbilityImg: {fileID: 1296680587}
-  eRange: 0
+  eRangeX: 0.002
+  eRangeZ: 1
   eCooldown: 0.5
   eAbilityImg: {fileID: 2088953632}
-  rRange: 0
+  rRangeX: 0.004
+  rRangeZ: 2
   rCooldown: 30
   rAbilityImg: {fileID: 653180018}
 --- !u!1001 &929449791
