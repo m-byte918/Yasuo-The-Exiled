@@ -8,7 +8,7 @@ public class PlayerAnimator : MonoBehaviour {
     float motionSmoothTime = .1f;
 
     void Start() {
-        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     void Update() {
