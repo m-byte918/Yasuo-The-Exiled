@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Abilities : MonoBehaviour {
@@ -17,7 +18,6 @@ public class Abilities : MonoBehaviour {
     // Indicator images
     public Canvas arrowIndicatorCanvas;
     public Canvas circleIndicatorCanvas;
-    public Transform player;
 
     [Header("Q Ability")]
     public float qRange = .002f;
@@ -26,7 +26,7 @@ public class Abilities : MonoBehaviour {
     public float qStackCooldown = 4f;
     public Image qAbilityImg;
 
-    private int qStackCounter = 0;
+    private int qStackCounter = 1;
     private float lastQTime = 0f;
 
     [Header("E Ability")]
@@ -61,11 +61,11 @@ public class Abilities : MonoBehaviour {
         circleIndicatorCanvas.enabled = false;
 
         // Rotate indicator along y axis relative to mouse and player position
-        Vector3 pos = Camera.main.WorldToScreenPoint(player.transform.position);
+        Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
         pos = Input.mousePosition - pos;
         float angle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
 
-        if (qStackCounter == 2) {
+        if (qStackCounter == 3) {
             // Whirlwind --> double the range
             arrowIndicatorCanvas.transform.localScale = new Vector3(qLastRange, .002f, 1f);
         } else {
@@ -73,6 +73,22 @@ public class Abilities : MonoBehaviour {
             arrowIndicatorCanvas.transform.localScale = new Vector3(qRange, .002f, 1f);
         }
         arrowIndicatorCanvas.transform.rotation = Quaternion.Euler(0f, 100f - angle, 0f);
+    }
+
+    void qAttack() {
+        Transform b = arrowIndicatorCanvas.transform.GetChild(1);
+        RaycastHit[] hits = Physics.BoxCastAll(b.localPosition, b.localScale / 2f, transform.forward, b.rotation);
+
+        foreach (RaycastHit h in hits) {
+            if (h.transform.name != "Enemy")
+                continue;
+            Debug.Log(Time.time);
+        }
+        if (qStackCounter < 3) {
+            //Debug.Log("Stab");
+        } else {
+            //Debug.Log("Whirlwind");
+        }
     }
 
     void qAbility() {
@@ -84,14 +100,15 @@ public class Abilities : MonoBehaviour {
             // Q is no longer being pressed, start the cooldown.
             qAbilityImg.fillAmount = 1f;
             arrowIndicatorCanvas.enabled = false;
+            qAttack();
 
-            if (qStackCounter == 0 || lastQTime % 60f < qStackCooldown) {
+            if (lastQTime % 60f < qStackCooldown) {
                 // Only stack if last Q time was less than 6 seconds
                 if (++qStackCounter > 3)
-                    qStackCounter = 0; // Max 3 stacks
+                    qStackCounter = 1; // Max 3 stacks
             } else {
                 // Otherwise, reset
-                qStackCounter = 0;
+                qStackCounter = 1;
             }
             lastQTime = 0;
         } else if (Input.GetKey(KeyCode.Q)) {
