@@ -4,9 +4,9 @@ using UnityEngine.UI;
 public class ArrowCollision : MonoBehaviour {
     public Image qAbilityImg;
 
-    void OnTriggerEnter(Collider other) {
-        if (other.name != "Enemy")
-            return;
-        //Debug.Log(Time.time);
+    private void OnTriggerExit(Collider other) {
+        // Stop whirlwind movement if reached destination
+        if (other.name == "Whirlwind")
+            other.gameObject.SetActive(false);
     }
 }

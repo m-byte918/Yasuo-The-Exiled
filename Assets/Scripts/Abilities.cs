@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Abilities : MonoBehaviour {
@@ -74,20 +73,29 @@ public class Abilities : MonoBehaviour {
         }
         arrowIndicatorCanvas.transform.rotation = Quaternion.Euler(0f, 100f - angle, 0f);
     }
-
+    
     void qAttack() {
         Transform b = arrowIndicatorCanvas.transform.GetChild(1);
-        RaycastHit[] hits = Physics.BoxCastAll(b.localPosition, b.localScale / 2f, transform.forward, b.rotation);
-
-        foreach (RaycastHit h in hits) {
-            if (h.transform.name != "Enemy")
-                continue;
-            Debug.Log(Time.time);
-        }
+        RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation);
+ 
         if (qStackCounter < 3) {
-            //Debug.Log("Stab");
+            // Stab attack
+            foreach (RaycastHit h in hits) {
+                if (h.transform.name == "Enemy")
+                    h.transform.GetComponent<Enemy>().takeDamage(25);
+            }
         } else {
-            //Debug.Log("Whirlwind");
+            // Whirlwind attack
+            GetComponent<Whirlwind>().launch();
+        }
+    }
+
+    void circleAttack() {
+        Collider[] collisions = Physics.OverlapSphere(transform.position, 8f * circleIndicatorCanvas.transform.localScale.z);
+
+        foreach (Collider c in collisions) {
+            if (c.name == "Enemy")
+                c.GetComponent<Enemy>().takeDamage(20 * circleIndicatorCanvas.transform.localScale.z);
         }
     }
 
@@ -133,6 +141,7 @@ public class Abilities : MonoBehaviour {
             // Key is no longer being pressed, start the cooldown.
             abilityImg.fillAmount = 1f;
             circleIndicatorCanvas.enabled = false;
+            circleAttack();
         } else if (Input.GetKey(code)) {
             // Key is being held down
             circleIndicatorCanvas.transform.localScale = new Vector3(rx, .002f, rz);
