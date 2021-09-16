@@ -3,7 +3,23 @@ using UnityEngine.UI;
 
 public class Abilities : MonoBehaviour {
     /**
-     * Arrow indicators modes:
+     * Description:
+     *  Q:
+     *      - Can use anywhere
+     *      - First two are a stab
+     *          - Deals damage if enemy touches arrow(?)
+     *      - Third is a whirlwind
+     *          - Shoots projectile that deals damage to the enemy
+     *          - When hits, knocks up all enemies in larger-than-whirlwind spherical range
+     *  E:
+     *      - Can use anywhere
+     *      - Dash attack: Dash forward, deal damage to all enemies in cone-shaped range
+     *  R:
+     *      - Can only be used when enemy is knocked up from Q
+     *      - Can still use indicator, but cannot activate
+     *      - Deals damage to all knocked up enemies & suspends them in the air for 1 second
+     *
+     *  Arrow indicators modes:
      *     mouse lock (arrow rotates around player with mouse):
      *         - when player holds down ability key
      *             - indicator dissapears when key is released or player right clicks
