@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class QuitButton : MonoBehaviour
 {
+    public Color startColor;
+    public Color mouseOverColor;
+
     private void OnMouseOver()
     {
-        Application.Quit();
+        this.GetComponent<MeshRenderer>().material.SetColor("_Color", mouseOverColor);
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            Application.Quit();
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        this.GetComponent<MeshRenderer>().material.SetColor("_Color", startColor);
     }
 }

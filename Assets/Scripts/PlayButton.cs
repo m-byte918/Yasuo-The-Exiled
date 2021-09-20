@@ -6,15 +6,25 @@ using UnityEngine.SceneManagement;
 public class PlayButton : MonoBehaviour
 {
     public AudioSource voiceLine;
+    public GameObject Fade;
+    public Color startColor;
+    public Color mouseOverColor;
 
     private void OnMouseOver()
     {
-        if(Input.GetMouseButtonUp(0))
-        {
-            voiceLine.Play();
+        this.GetComponent<MeshRenderer>().material.SetColor("_Color", mouseOverColor);
 
+        if (Input.GetMouseButtonUp(0))
+        {
+            Fade.SetActive(true);
+            voiceLine.Play();
             StartCoroutine(WaitForSceneLoad());
         }
+    }
+
+    private void OnMouseExit()
+    {
+        this.GetComponent<MeshRenderer>().material.SetColor("_Color", startColor);
     }
 
     private IEnumerator WaitForSceneLoad()
