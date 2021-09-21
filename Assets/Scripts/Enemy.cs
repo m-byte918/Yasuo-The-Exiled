@@ -17,14 +17,12 @@ public class Enemy : MonoBehaviour {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    void Update() {
-        if (Time.time >= colorHoldTime) {
-            // Reset color after current time exceeds color hold time
-            transform.GetComponent<Renderer>().material.color = new Color(255, 255, 255);
-        }
+    void FixedUpdate() {
         if (!agent.enabled) {
             if (Time.time < snapToGroundIgnoreTime) {
                 rb.useGravity = false;
+                //rb.velocity += new Vector3(0, 4f * Time.fixedDeltaTime, 0);
+                //rb.AddForce(transform.up * 2, ForceMode.VelocityChange);
                 return;
             }
             if (transform.position.y < groundY) {
@@ -33,7 +31,7 @@ public class Enemy : MonoBehaviour {
             }
             if (rb.velocity.y < 0) {
                 // Fall faster
-                rb.velocity += -transform.up * 20 * Time.deltaTime;
+                rb.velocity += -transform.up * 20 * Time.fixedDeltaTime;
             }
             rb.useGravity = true;
             if (Math.Abs(transform.position.y - groundY) < 3f) {
@@ -48,6 +46,13 @@ public class Enemy : MonoBehaviour {
         // Look at the player and move toward them
         transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
         agent.SetDestination(playerTransform.position);
+    }
+
+    void Update() {
+        if (Time.time >= colorHoldTime) {
+            // Reset color after current time exceeds color hold time
+            transform.GetComponent<Renderer>().material.color = new Color(255, 255, 255);
+        }
     }
 
     public void takeDamage(float value) {
@@ -76,6 +81,7 @@ public class Enemy : MonoBehaviour {
         // Don't snap back to ground until half a second passes
         snapToGroundIgnoreTime = Time.time + .5f;
 
-        rb.AddForce(transform.up * 75, ForceMode.Impulse);
+        //rb.velocity = new Vector3(0, 16f, 0);
+        rb.AddForce(transform.up * 32, ForceMode.VelocityChange);
     }
 }
