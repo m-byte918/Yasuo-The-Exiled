@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class Abilities : MonoBehaviour {
@@ -33,6 +35,11 @@ public class Abilities : MonoBehaviour {
     // Indicator images
     public Canvas arrowIndicatorCanvas;
     public Canvas circleIndicatorCanvas;
+
+    private float rotateVelocity;
+    private float nextAutoAttackTime = 0f;
+    public float autoAttackDuration = 5f; // seconds
+    public float autoAttackDamage = 10f;
 
     [Header("Q Ability")]
     public float qRange = .002f;
@@ -70,6 +77,28 @@ public class Abilities : MonoBehaviour {
         qAbility();
         eAbility();
         rAbility();
+
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        Array.Sort<GameObject>(enemies, new Comparison<GameObject>((e1, e2) =>
+                (int)e1.GetComponent<NavMeshAgent>().remainingDistance - (int)e2.GetComponent<NavMeshAgent>().remainingDistance));
+
+        if (enemies[0].GetComponent<NavMeshAgent>().remainingDistance > 3)
+            return;
+
+        if (GetComponent<NavMeshAgent>().remainingDistance < 0.5) {
+            Quaternion targetRotation = Quaternion.LookRotation(enemies[0].transform.position - transform.position);
+
+            float rotationY = Mathf.SmoothDampAngle(
+                transform.eulerAngles.y, targetRotation.eulerAngles.y, ref rotateVelocity, 1 * (Time.deltaTime * 10)
+            );
+            transform.eulerAngles = new Vector3(0, rotationY, 0);
+        }
+
+        if (Time.time >= nextAutoAttackTime) {
+            stab(autoAttackDamage);
+            nextAutoAttackTime = Time.time + autoAttackDuration;
+        }
     }
 
     void moveArrowIndicator() {
@@ -89,17 +118,20 @@ public class Abilities : MonoBehaviour {
         }
         arrowIndicatorCanvas.transform.rotation = Quaternion.Euler(0f, 100f - angle, 0f);
     }
-    
-    void qAttack() {
+
+    void stab(float damage) {
+        // Stab attack
         Transform b = arrowIndicatorCanvas.transform.GetChild(1);
         RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation);
- 
+        foreach (RaycastHit h in hits) {
+            if (h.transform.CompareTag("Enemy"))
+                h.transform.GetComponent<Enemy>().takeDamage(damage);
+        }
+    }
+    
+    void qAttack() {
         if (qStackCounter < 3) {
-            // Stab attack
-            foreach (RaycastHit h in hits) {
-                if (h.transform.name == "Enemy")
-                    h.transform.GetComponent<Enemy>().takeDamage(25);
-            }
+            stab(25);
         } else {
             // Whirlwind attack
             GetComponent<Whirlwind>().launch();
@@ -110,7 +142,7 @@ public class Abilities : MonoBehaviour {
         Collider[] collisions = Physics.OverlapSphere(transform.position, 8f * circleIndicatorCanvas.transform.localScale.z);
 
         foreach (Collider c in collisions) {
-            if (c.name == "Enemy")
+            if (c.CompareTag("Enemy"))
                 c.GetComponent<Enemy>().takeDamage(20 * circleIndicatorCanvas.transform.localScale.z);
         }
     }

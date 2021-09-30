@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour {
     Rigidbody rb;
     NavMeshAgent agent;
-    Transform playerTransform;
+    public GameObject coinPrefab;
+    private GameObject player;
     float colorHoldTime = 0f;
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
@@ -14,7 +15,9 @@ public class Enemy : MonoBehaviour {
     void Start() {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        ++player.GetComponent<WaveManager>().currentEnemyCount;
     }
 
     void FixedUpdate() {
@@ -43,9 +46,12 @@ public class Enemy : MonoBehaviour {
         // Stop enemy if it gets too close or too far from player
         agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
 
+        if (agent.remainingDistance <= 3f) {
+            player.GetComponentInChildren<PlayerHealthSlider>().takeDamage(1);
+        }
         // Look at the player and move toward them
-        transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
-        agent.SetDestination(playerTransform.position);
+        transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
+        agent.SetDestination(player.transform.position);
     }
 
     void Update() {
@@ -67,6 +73,18 @@ public class Enemy : MonoBehaviour {
         if (health.value <= 0f) {
             // Out of health -> die
             Destroy(gameObject);
+
+            // Spawn a coin
+            Instantiate(coinPrefab, transform.position, transform.rotation);
+
+            // Unity waits until the next frame to remove the object from
+            // tags, so having a seperate enemy count is necessary
+            WaveManager wm = player.GetComponent<WaveManager>();
+
+            if (--wm.currentEnemyCount == 0) {
+                // Spawn next wave
+                player.GetComponent<WaveManager>().spawnNextWave();
+            }
         }
     }
 
