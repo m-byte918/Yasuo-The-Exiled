@@ -38,7 +38,7 @@ public class Abilities : MonoBehaviour {
 
     private float rotateVelocity;
     private float nextAutoAttackTime = 0f;
-    public float autoAttackDuration = 5f; // seconds
+    public float autoAttackDuration = 2f; // seconds
     public float autoAttackDamage = 10f;
 
     [Header("Q Ability")]

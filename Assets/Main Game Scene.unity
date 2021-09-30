@@ -1970,6 +1970,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowIndicatorCanvas: {fileID: 141873468}
   circleIndicatorCanvas: {fileID: 1939361844}
+  autoAttackDuration: 5
+  autoAttackDamage: 10
   qRange: 0.002
   qLastRange: 0.004
   qCooldown: 2
