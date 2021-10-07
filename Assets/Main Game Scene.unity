@@ -1970,7 +1970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowIndicatorCanvas: {fileID: 141873468}
   circleIndicatorCanvas: {fileID: 1939361844}
-  autoAttackDuration: 5
+  autoAttackDuration: 1
   autoAttackDamage: 10
   qRange: 0.002
   qLastRange: 0.004
@@ -2346,13 +2346,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 967472648}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: -0.5}
   m_LocalPosition: {x: 270, y: 14.66, z: 193.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 270, z: 0}
 --- !u!1 &987241928
 GameObject:
   m_ObjectHideFlags: 0
@@ -4402,7 +4402,7 @@ RectTransform:
   m_GameObject: {fileID: 2055949664}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.29, z: 1}
   m_Children: []
   m_Father: {fileID: 2023108773}
   m_RootOrder: 0

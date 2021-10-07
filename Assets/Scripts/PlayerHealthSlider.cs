@@ -12,7 +12,6 @@ public class PlayerHealthSlider : MonoBehaviour {
         // Reduce health
         Slider health = transform.GetChild(0).GetComponent<Slider>();
         health.value -= value;
-        Debug.Log(health.value);
 
         if (health.value <= 0f) {
             // Game over

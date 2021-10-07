@@ -3,9 +3,14 @@
 public class Whirlwind : MonoBehaviour {
     public GameObject whirlwind;
     public GameObject arrowCollider;
+    //public AudioSource whirlwindSound;
     private float speed = 40f;
 
     public void launch() {
+        // Play sound
+        //whirlwindSound.Play();
+
+        // Make visible
         whirlwind.SetActive(true);
 
         // Launch from player position

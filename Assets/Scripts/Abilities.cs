@@ -17,9 +17,8 @@ public class Abilities : MonoBehaviour {
      *      - Can use anywhere
      *      - Dash attack: Dash forward, deal damage to all enemies in cone-shaped range
      *  R:
-     *      - Can only be used when enemy is knocked up from Q
-     *      - Can still use indicator, but cannot activate
-     *      - Deals damage to all knocked up enemies & suspends them in the air for 1 second
+     *      - Spin attack
+     *      - Knock up enemies
      *
      *  Arrow indicators modes:
      *     mouse lock (arrow rotates around player with mouse):
@@ -38,7 +37,7 @@ public class Abilities : MonoBehaviour {
 
     private float rotateVelocity;
     private float nextAutoAttackTime = 0f;
-    public float autoAttackDuration = 2f; // seconds
+    public float autoAttackDuration = 1f; // seconds
     public float autoAttackDamage = 10f;
 
     [Header("Q Ability")]
@@ -56,12 +55,14 @@ public class Abilities : MonoBehaviour {
     public float eRangeZ = 1f;
     public float eCooldown = 0.5f;
     public Image eAbilityImg;
+    public AudioSource eAbilitySound;
 
     [Header("R Ability")]
     public float rRangeX = .004f;
     public float rRangeZ = 2f;
     public float rCooldown = 30f;
     public Image rAbilityImg;
+    public AudioSource rAbilitySound;
 
     void Start() {
         qAbilityImg.fillAmount = 0f;
@@ -132,6 +133,7 @@ public class Abilities : MonoBehaviour {
     void qAttack() {
         if (qStackCounter < 3) {
             stab(25);
+            // <play jab sound>
         } else {
             // Whirlwind attack
             GetComponent<Whirlwind>().launch();
@@ -189,6 +191,16 @@ public class Abilities : MonoBehaviour {
             // Key is no longer being pressed, start the cooldown.
             abilityImg.fillAmount = 1f;
             circleIndicatorCanvas.enabled = false;
+
+            /**
+            // Play attack audio
+            if (code == KeyCode.E) {
+                eAbilitySound.Play();
+                // set animation state
+            } else {
+                rAbilitySound.Play();
+                // set animation state
+            }**/
             circleAttack();
         } else if (Input.GetKey(code)) {
             // Key is being held down
