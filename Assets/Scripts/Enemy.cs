@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour {
         agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
 
         if (agent.remainingDistance <= 3f) {
-            player.GetComponentInChildren<PlayerHealthSlider>().takeDamage(1);
+            //player.GetComponentInChildren<PlayerHealthSlider>().takeDamage(1);
         }
         // Look at the player and move toward them
         transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));

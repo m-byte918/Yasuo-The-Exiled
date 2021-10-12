@@ -192,7 +192,7 @@ public class Abilities : MonoBehaviour {
             abilityImg.fillAmount = 1f;
             circleIndicatorCanvas.enabled = false;
 
-            /**
+            /*
             // Play attack audio
             if (code == KeyCode.E) {
                 eAbilitySound.Play();
@@ -200,7 +200,7 @@ public class Abilities : MonoBehaviour {
             } else {
                 rAbilitySound.Play();
                 // set animation state
-            }**/
+            }*/
             circleAttack();
         } else if (Input.GetKey(code)) {
             // Key is being held down
