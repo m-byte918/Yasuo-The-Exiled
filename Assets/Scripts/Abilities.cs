@@ -81,19 +81,22 @@ public class Abilities : MonoBehaviour {
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        Array.Sort<GameObject>(enemies, new Comparison<GameObject>((e1, e2) =>
-                (int)e1.GetComponent<NavMeshAgent>().remainingDistance - (int)e2.GetComponent<NavMeshAgent>().remainingDistance));
+        if (enemies.Length > 0) {
+            // Automatically face the nearest enemy
+            Array.Sort<GameObject>(enemies, new Comparison<GameObject>((e1, e2) =>
+                    (int)e1.GetComponent<NavMeshAgent>().remainingDistance - (int)e2.GetComponent<NavMeshAgent>().remainingDistance));
 
-        if (enemies[0].GetComponent<NavMeshAgent>().remainingDistance > 3)
-            return;
+            if (enemies[0].GetComponent<NavMeshAgent>().remainingDistance > 3)
+                return;
 
-        if (GetComponent<NavMeshAgent>().remainingDistance < 0.5) {
-            Quaternion targetRotation = Quaternion.LookRotation(enemies[0].transform.position - transform.position);
+            if (GetComponent<NavMeshAgent>().remainingDistance < 0.5) {
+                Quaternion targetRotation = Quaternion.LookRotation(enemies[0].transform.position - transform.position);
 
-            float rotationY = Mathf.SmoothDampAngle(
-                transform.eulerAngles.y, targetRotation.eulerAngles.y, ref rotateVelocity, 1 * (Time.deltaTime * 10)
-            );
-            transform.eulerAngles = new Vector3(0, rotationY, 0);
+                float rotationY = Mathf.SmoothDampAngle(
+                    transform.eulerAngles.y, targetRotation.eulerAngles.y, ref rotateVelocity, 1 * (Time.deltaTime * 10)
+                );
+                transform.eulerAngles = new Vector3(0, rotationY, 0);
+            }
         }
 
         if (Time.time >= nextAutoAttackTime) {
@@ -121,6 +124,9 @@ public class Abilities : MonoBehaviour {
     }
 
     void stab(float damage) {
+        /**
+         * Play stab animation here
+        **/
         // Stab attack
         Transform b = arrowIndicatorCanvas.transform.GetChild(1);
         RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation);

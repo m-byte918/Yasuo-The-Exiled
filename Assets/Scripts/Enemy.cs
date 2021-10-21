@@ -12,10 +12,18 @@ public class Enemy : MonoBehaviour {
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
 
+    // Auto attack
+    private float nextAutoAttackTime = 0f;
+    public float autoAttackDuration = 2f; // seconds
+    public float autoAttackDamage = 20f;
+
     void Start() {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+
+        // Prevent auto hit at the start of the game
+        nextAutoAttackTime = Time.time + autoAttackDuration;
 
         ++player.GetComponent<WaveManager>().currentEnemyCount;
     }
@@ -46,8 +54,10 @@ public class Enemy : MonoBehaviour {
         // Stop enemy if it gets too close or too far from player
         agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
 
-        if (agent.remainingDistance <= 3f) {
-            //player.GetComponentInChildren<PlayerHealthSlider>().takeDamage(1);
+        // Auto attack the player
+        if (Time.time >= nextAutoAttackTime && agent.remainingDistance <= 3f) {
+            GameObject.Find("2D Health Slider").GetComponent<Health>().takeDamage(autoAttackDamage);
+            nextAutoAttackTime = Time.time + autoAttackDuration;
         }
         // Look at the player and move toward them
         transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
