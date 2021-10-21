@@ -57,9 +57,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AO: 2.4
-    - _BaseLight: 0.35
+    - _BaseLight: 0.604
     - _BumpScale: 1
-    - _Cutoff: 0.5
+    - _Cutoff: 0.607
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
