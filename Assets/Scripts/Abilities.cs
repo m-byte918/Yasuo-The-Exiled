@@ -40,12 +40,19 @@ public class Abilities : MonoBehaviour {
     public float autoAttackDuration = 1f; // seconds
     public float autoAttackDamage = 10f;
 
+    //AudioSouce for abilities
+    private AudioSource audioSourceSound;
+    private AudioSource audioSourceVoice;
+
     [Header("Q Ability")]
     public float qRange = .002f;
     public float qLastRange = .004f;
     public float qCooldown = 2f;
     public float qStackCooldown = 4f;
     public Image qAbilityImg;
+    public AudioClip qOneAbilitySound, qThreeAbilitySound;
+    public AudioClip qOneAbilityVoice, qThreeAbilityVoice;
+    
 
     private int qStackCounter = 1;
     private float lastQTime = 0f;
@@ -55,14 +62,16 @@ public class Abilities : MonoBehaviour {
     public float eRangeZ = 1f;
     public float eCooldown = 0.5f;
     public Image eAbilityImg;
-    public AudioSource eAbilitySound;
+    public AudioClip eAbilitySound;
+    public AudioClip eAbilityVoice;
 
     [Header("R Ability")]
     public float rRangeX = .004f;
     public float rRangeZ = 2f;
     public float rCooldown = 30f;
     public Image rAbilityImg;
-    public AudioSource rAbilitySound;
+    public AudioClip rAbilitySound;
+    public AudioClip rAbilityVoice;
 
     void Start() {
         qAbilityImg.fillAmount = 0f;
@@ -71,6 +80,12 @@ public class Abilities : MonoBehaviour {
 
         arrowIndicatorCanvas.enabled = false;
         circleIndicatorCanvas.enabled = false;
+
+        audioSourceSound = gameObject.GetComponent<AudioSource>();
+        audioSourceVoice = gameObject.GetComponent<AudioSource>();
+
+        audioSourceSound.volume = 0.5f;
+        audioSourceVoice.volume = 0.5f;
     }
 
     // Update all abilities
@@ -140,8 +155,14 @@ public class Abilities : MonoBehaviour {
         if (qStackCounter < 3) {
             stab(25);
             // <play jab sound>
+            audioSourceVoice.PlayOneShot(qOneAbilityVoice);
+            //audioSourceSound.PlayOneShot(qOneAbilitySound);
+            
         } else {
             // Whirlwind attack
+            audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
+           // audioSourceSound.PlayOneShot(qThreeAbilitySound);
+
             GetComponent<Whirlwind>().launch();
         }
     }
@@ -198,15 +219,19 @@ public class Abilities : MonoBehaviour {
             abilityImg.fillAmount = 1f;
             circleIndicatorCanvas.enabled = false;
 
-            /*
+            
             // Play attack audio
             if (code == KeyCode.E) {
-                eAbilitySound.Play();
+                
+                audioSourceVoice.PlayOneShot(eAbilityVoice);
+                audioSourceSound.PlayOneShot(eAbilitySound);
                 // set animation state
             } else {
-                rAbilitySound.Play();
+            
+                audioSourceVoice.PlayOneShot(rAbilityVoice);
+                //audioSourceSound.PlayOneShot(rAbilitySound);
                 // set animation state
-            }*/
+            }
             circleAttack();
         } else if (Input.GetKey(code)) {
             // Key is being held down
