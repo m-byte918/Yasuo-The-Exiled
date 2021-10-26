@@ -84,8 +84,8 @@ public class Abilities : MonoBehaviour {
         audioSourceSound = gameObject.GetComponent<AudioSource>();
         audioSourceVoice = gameObject.GetComponent<AudioSource>();
 
-        audioSourceSound.volume = 0.5f;
-        audioSourceVoice.volume = 0.5f;
+        //audioSourceSound.volume = 0.5f;
+        //audioSourceVoice.volume = 0.5f;
     }
 
     // Update all abilities
