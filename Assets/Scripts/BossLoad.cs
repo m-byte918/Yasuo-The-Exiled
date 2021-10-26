@@ -9,8 +9,6 @@ public class BossLoad : MonoBehaviour
 
    private void OnTriggerEnter(Collider target)
     {
-        Debug.Log("Trigger Works");
-
         if (target.gameObject.tag.Equals("Player"))
         {
             Fade.SetActive(true);
