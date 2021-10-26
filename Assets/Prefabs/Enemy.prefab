@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 966524102508492361}
   - component: {fileID: 966524102508492360}
   - component: {fileID: 3581549940053772888}
-  - component: {fileID: 5340285095090579938}
+  - component: {fileID: 9147309803401360283}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -496,7 +496,7 @@ CapsuleCollider:
   m_Height: 1.39
   m_Direction: 1
   m_Center: {x: 0.01, y: 0.23, z: 0.03}
---- !u!95 &5340285095090579938
+--- !u!95 &9147309803401360283
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
