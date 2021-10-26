@@ -10,16 +10,15 @@ public class OnCoinCollision : MonoBehaviour {
         coinCountText = GameObject.Find("Wallet").GetComponent<Text>();
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.name != "Player") {
+    void OnCollisionEnter(Collision c) {
+        if (c.collider.name != "Player") {
             return;
         }
-        // In the future we should add this to the player "wallet"
         // But for now, just delete
         Destroy(gameObject);
 
-        // Update coin count and set text accordingly
-        PlayerStats stats = other.GetComponent<PlayerStats>();
+        // Increment coin count and set text accordingly
+        PlayerStats stats = c.collider.GetComponent<PlayerStats>();
         stats.setCoinCount(stats.getCoinCount() + 1);
         coinCountText.text = "Coins: " + stats.getCoinCount();
     }

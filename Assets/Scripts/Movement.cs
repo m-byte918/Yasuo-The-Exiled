@@ -9,6 +9,13 @@ public class Movement : MonoBehaviour {
 
     void Start() {
         agent = GetComponent<NavMeshAgent>();
+
+        // Player collider should ignore collision with ground and whirlwind
+        Transform t = GameObject.Find("Terrain").transform;
+        for (int i = 0, l = t.childCount; i < l; ++i) {
+            Physics.IgnoreCollision(GetComponent<Collider>(), t.GetChild(i).GetComponent<Collider>());
+        }
+        Physics.IgnoreCollision(GetComponent<Collider>(), GetComponent<Whirlwind>().GetComponent<Collider>());
     }
 
     void Update() {

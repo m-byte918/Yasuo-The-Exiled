@@ -21,11 +21,12 @@ public class Enemy : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+        Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>());
 
         // Prevent auto hit at the start of the game
         nextAutoAttackTime = Time.time + autoAttackDuration;
 
-        ++player.GetComponent<WaveManager>().currentEnemyCount;
+        ++GameObject.Find("Waves").GetComponent<WaveManager>().currentEnemyCount;
     }
 
     void FixedUpdate() {
@@ -82,6 +83,10 @@ public class Enemy : MonoBehaviour {
 
         if (health.value <= 0f) {
             // Out of health -> die
+            if (agent.enabled) {
+                agent.isStopped = true;
+                agent.enabled = false;
+            }
             Destroy(gameObject);
 
             // Spawn a coin
@@ -89,11 +94,11 @@ public class Enemy : MonoBehaviour {
 
             // Unity waits until the next frame to remove the object from
             // tags, so having a seperate enemy count is necessary
-            WaveManager wm = player.GetComponent<WaveManager>();
+            WaveManager wm = GameObject.Find("Waves").GetComponent<WaveManager>();
 
             if (--wm.currentEnemyCount == 0) {
                 // Spawn next wave
-                player.GetComponent<WaveManager>().spawnNextWave();
+                //player.GetComponent<WaveManager>().spawnNextWave();
             }
         }
     }

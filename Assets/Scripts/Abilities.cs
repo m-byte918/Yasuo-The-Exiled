@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -94,12 +95,20 @@ public class Abilities : MonoBehaviour {
         eAbility();
         rAbility();
 
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemiesUnfiltered = GameObject.FindGameObjectsWithTag("Enemy");
+        List<GameObject> enemies = new List<GameObject>();
 
-        if (enemies.Length > 0) {
+        // Filter out enemies with unactive or disabled nav mesh agents
+        foreach (GameObject enemy in enemiesUnfiltered) {
+            NavMeshAgent n = enemy.GetComponent<NavMeshAgent>();
+            if (n.isActiveAndEnabled)
+                enemies.Add(enemy);
+        }
+
+        if (enemies.Count > 0) {
             // Automatically face the nearest enemy
-            Array.Sort<GameObject>(enemies, new Comparison<GameObject>((e1, e2) =>
-                    (int)e1.GetComponent<NavMeshAgent>().remainingDistance - (int)e2.GetComponent<NavMeshAgent>().remainingDistance));
+            enemies.Sort((e1, e2) =>
+                    (int)e1.GetComponent<NavMeshAgent>().remainingDistance - (int)e2.GetComponent<NavMeshAgent>().remainingDistance);
 
             if (enemies[0].GetComponent<NavMeshAgent>().remainingDistance > 3)
                 return;

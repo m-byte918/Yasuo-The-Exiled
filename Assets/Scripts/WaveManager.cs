@@ -6,25 +6,36 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemyPrefab;
     public Canvas playerHealthCanvas;
 
-    public float waveGrowthRate = 2.0f;
+    public float waveGrowthRate = 3.0f;
     public int currentEnemyCount = 0;
     private int currentWaveSize = 1;
+    private int currentWave = 0;
 
     public void spawnNextWave() {
+        ++currentWave;
+
+        GameObject currentWaveTrigger = GameObject.Find("Wave " + currentWave);
+        GameObject nextWaveTrigger = GameObject.Find("Wave " + (currentWave + 1));
+
+        if (!currentWaveTrigger || !nextWaveTrigger) {
+            // No start or end of waves
+            return;
+        }
         // Scale current wave size by predetermined factor
         int nextWaveSize = (int)System.Math.Ceiling(currentWaveSize * waveGrowthRate);
 
         // Enemy spawn bound
-        float minX = Camera.main.ScreenToWorldPoint(new Vector2(0, 0)).x;
-        float minZ = Camera.main.ScreenToWorldPoint(new Vector2(0, 0)).z;
-        float maxX = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-        float maxZ = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).z;
+        float minX = currentWaveTrigger.transform.position.x - currentWaveTrigger.transform.lossyScale.x / 2f;
+        float maxX = currentWaveTrigger.transform.position.x + currentWaveTrigger.transform.lossyScale.x / 2f;
+        float minZ = currentWaveTrigger.transform.position.z + currentWaveTrigger.transform.lossyScale.z / 2f;
+        float maxZ = nextWaveTrigger.transform.position.z - nextWaveTrigger.transform.lossyScale.z / 2f;
+        float spawnY = GameObject.Find("Player").transform.position.y;
 
         for (int i = 0; i < nextWaveSize; ++i) {
             // Choose random position within spawn bound
             float spawnX = Random.Range(minX, maxX);
             float spawnZ = Random.Range(minZ, maxZ);
-            Vector3 spawnPosition = new Vector3(spawnX, transform.position.y, spawnZ);
+            Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
 
             // Spawn new enemy
             GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
