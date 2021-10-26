@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour {
     NavMeshAgent agent;
     public GameObject coinPrefab;
     private GameObject player;
+    private Animator anim;
     float colorHoldTime = 0f;
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
@@ -21,6 +22,7 @@ public class Enemy : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+        anim = GetComponent<Animator>();
         Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>());
 
         // Prevent auto hit at the start of the game
@@ -33,6 +35,8 @@ public class Enemy : MonoBehaviour {
         if (!agent.enabled) {
             if (Time.time < snapToGroundIgnoreTime) {
                 rb.useGravity = false;
+                anim.SetBool("isWalking", false);
+                anim.SetBool("isAttacking", false);
                 //rb.velocity += new Vector3(0, 4f * Time.fixedDeltaTime, 0);
                 //rb.AddForce(transform.up * 2, ForceMode.VelocityChange);
                 return;
@@ -54,9 +58,12 @@ public class Enemy : MonoBehaviour {
         }
         // Stop enemy if it gets too close or too far from player
         agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
+        anim.SetBool("isWalking", !agent.isStopped);
 
         // Auto attack the player
-        if (Time.time >= nextAutoAttackTime && agent.remainingDistance <= 3f) {
+        bool isAttacking = Time.time >= nextAutoAttackTime && agent.remainingDistance <= 3f;
+        anim.SetBool("isAttacking", isAttacking);
+        if (isAttacking) {
             GameObject.Find("2D Health Slider").GetComponent<Health>().takeDamage(autoAttackDamage);
             nextAutoAttackTime = Time.time + autoAttackDuration;
         }
