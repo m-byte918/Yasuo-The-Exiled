@@ -6,7 +6,7 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemyPrefab;
     public Canvas playerHealthCanvas;
 
-    public float waveGrowthRate = 3.0f;
+    public float waveGrowthRate = 1.5f;
     public int currentEnemyCount = 0;
     private int currentWaveSize = 1;
     private int currentWave = 0;
