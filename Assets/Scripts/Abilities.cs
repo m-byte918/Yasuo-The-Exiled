@@ -164,7 +164,9 @@ public class Abilities : MonoBehaviour {
         if (qStackCounter < 3) {
             stab(25);
             // <play jab sound>
+            audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
+            
             //audioSourceSound.PlayOneShot(qOneAbilitySound);
             
         } else {
@@ -238,6 +240,7 @@ public class Abilities : MonoBehaviour {
             } else {
             
                 audioSourceVoice.PlayOneShot(rAbilityVoice);
+                audioSourceSound.PlayOneShot(rAbilitySound);
                 //audioSourceSound.PlayOneShot(rAbilitySound);
                 // set animation state
             }
