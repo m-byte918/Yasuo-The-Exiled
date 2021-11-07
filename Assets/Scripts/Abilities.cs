@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -40,6 +41,8 @@ public class Abilities : MonoBehaviour {
     private float nextAutoAttackTime = 0f;
     public float autoAttackDuration = 1f; // seconds
     public float autoAttackDamage = 10f;
+
+    private Animator anim;
 
     //AudioSouce for abilities
     private AudioSource audioSourceSound;
@@ -84,6 +87,8 @@ public class Abilities : MonoBehaviour {
 
         audioSourceSound = gameObject.GetComponent<AudioSource>();
         audioSourceVoice = gameObject.GetComponent<AudioSource>();
+
+        anim = GetComponent<Animator>();
 
         //audioSourceSound.volume = 0.5f;
         //audioSourceVoice.volume = 0.5f;
@@ -166,14 +171,13 @@ public class Abilities : MonoBehaviour {
             // <play jab sound>
             audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
-            
-            //audioSourceSound.PlayOneShot(qOneAbilitySound);
+            StartCoroutine(qAbilityAnimation());
+           
             
         } else {
             // Whirlwind attack
             audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
-           // audioSourceSound.PlayOneShot(qThreeAbilitySound);
-
+            StartCoroutine(qAbilityAnimation());
             GetComponent<Whirlwind>().launch();
         }
     }
@@ -237,12 +241,13 @@ public class Abilities : MonoBehaviour {
                 audioSourceVoice.PlayOneShot(eAbilityVoice);
                 audioSourceSound.PlayOneShot(eAbilitySound);
                 // set animation state
+                StartCoroutine(eAbilityAnimation());
             } else {
             
                 audioSourceVoice.PlayOneShot(rAbilityVoice);
                 audioSourceSound.PlayOneShot(rAbilitySound);
-                //audioSourceSound.PlayOneShot(rAbilitySound);
                 // set animation state
+                StartCoroutine(rAbilityAnimation());
             }
             circleAttack();
         } else if (Input.GetKey(code)) {
@@ -262,5 +267,25 @@ public class Abilities : MonoBehaviour {
             abilityImg.fillAmount = 0f; // Cooldown finished
         }
         return true;
+    }
+
+    IEnumerator qAbilityAnimation()
+    {
+        anim.SetBool("QAttack", true);
+        yield return new WaitForSeconds(1.0f);
+        anim.SetBool("QAttack", false);
+    }
+
+    IEnumerator eAbilityAnimation()
+    {
+        anim.SetBool("EAttack", true);
+        yield return new WaitForSeconds(0.5f);
+        anim.SetBool("EAttack", false);
+    }
+    IEnumerator rAbilityAnimation()
+    {
+        anim.SetBool("RAttack", true);
+        yield return new WaitForSeconds(1.2f);
+        anim.SetBool("RAttack", false);
     }
 }
