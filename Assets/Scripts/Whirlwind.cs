@@ -5,6 +5,7 @@ public class Whirlwind : MonoBehaviour {
     public GameObject arrowCollider;
     //public AudioSource whirlwindSound;
     private float speed = 40f;
+    Vector3 direction; // Direction whirlwind will launch
 
     public void launch() {
         // Play sound
@@ -19,6 +20,7 @@ public class Whirlwind : MonoBehaviour {
             transform.position.y + transform.localScale.y,
             transform.position.z
         );
+        direction = -arrowCollider.transform.forward;
     }
 
     void FixedUpdate() {
@@ -27,7 +29,7 @@ public class Whirlwind : MonoBehaviour {
             return;
         }
         // Launch in forward direction
-        Vector3 velocity = -arrowCollider.transform.forward * speed * Time.fixedDeltaTime;
+        Vector3 velocity = direction * speed * Time.fixedDeltaTime;
         whirlwind.GetComponent<Rigidbody>().MovePosition(whirlwind.transform.position + velocity);
     }
 }
