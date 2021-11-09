@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour {
     Rigidbody rb;
     NavMeshAgent agent;
-    public GameObject coinPrefab;
+    //public GameObject coinPrefab;
     private GameObject player;
     private Animator anim;
     float colorHoldTime = 0f;
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
+
+    public Text coinCountText;
 
     // Auto attack
     private float nextAutoAttackTime = 0f;
@@ -23,6 +25,7 @@ public class Enemy : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
+        coinCountText = GameObject.Find("Wallet").GetComponent<Text>();
         Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>());
 
         // Prevent auto hit at the start of the game
@@ -51,6 +54,7 @@ public class Enemy : MonoBehaviour {
             }
             rb.useGravity = true;
             if (Math.Abs(transform.position.y - groundY) < 3f) {
+                Debug.Log("Reenabled");
                 // Re-enable movement once enemy falls back to the ground
                 agent.enabled = true;
             }
@@ -97,7 +101,12 @@ public class Enemy : MonoBehaviour {
             Destroy(gameObject);
 
             // Spawn a coin
-            Instantiate(coinPrefab, transform.position, transform.rotation);
+            //Instantiate(coinPrefab, transform.position, transform.rotation);
+
+            // Increment coin count and set text accordingly
+            PlayerStats stats = player.GetComponent<PlayerStats>();
+            stats.setCoinCount(stats.getCoinCount() + 10);
+            coinCountText.text = "Coins: " + stats.getCoinCount();
 
             // Unity waits until the next frame to remove the object from
             // tags, so having a seperate enemy count is necessary

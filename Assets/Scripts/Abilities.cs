@@ -56,7 +56,6 @@ public class Abilities : MonoBehaviour {
     public Image qAbilityImg;
     public AudioClip qOneAbilitySound, qThreeAbilitySound;
     public AudioClip qOneAbilityVoice, qThreeAbilityVoice;
-    
 
     private int qStackCounter = 1;
     private float lastQTime = 0f;
