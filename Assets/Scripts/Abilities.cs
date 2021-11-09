@@ -157,7 +157,7 @@ public class Abilities : MonoBehaviour {
         **/
         // Stab attack
         Transform b = arrowIndicatorCanvas.transform.GetChild(1);
-        RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation);
+        RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation, 4f);
         foreach (RaycastHit h in hits) {
             if (h.transform.CompareTag("Enemy"))
                 h.transform.GetComponent<Enemy>().takeDamage(damage);
@@ -171,8 +171,6 @@ public class Abilities : MonoBehaviour {
             audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
             StartCoroutine(qAbilityAnimation());
-           
-            
         } else {
             // Whirlwind attack
             audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
@@ -236,13 +234,11 @@ public class Abilities : MonoBehaviour {
             
             // Play attack audio
             if (code == KeyCode.E) {
-                
                 audioSourceVoice.PlayOneShot(eAbilityVoice);
                 audioSourceSound.PlayOneShot(eAbilitySound);
                 // set animation state
                 StartCoroutine(eAbilityAnimation());
             } else {
-            
                 audioSourceVoice.PlayOneShot(rAbilityVoice);
                 audioSourceSound.PlayOneShot(rAbilitySound);
                 // set animation state

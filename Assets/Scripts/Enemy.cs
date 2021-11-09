@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour {
     void FixedUpdate() {
         if (!agent.enabled) {
             if (Time.time < snapToGroundIgnoreTime) {
-                rb.useGravity = false;
+                //rb.useGravity = false;
                 anim.SetBool("isWalking", false);
                 anim.SetBool("isAttacking", false);
                 //rb.velocity += new Vector3(0, 4f * Time.fixedDeltaTime, 0);
@@ -48,13 +48,12 @@ public class Enemy : MonoBehaviour {
                 // Stop from falling into the ground
                 transform.position = new Vector3(transform.position.x, groundY, transform.position.z);
             }
-            if (rb.velocity.y < 0) {
+            /*if (rb.velocity.y < 0) {
                 // Fall faster
                 rb.velocity += -transform.up * 20 * Time.fixedDeltaTime;
-            }
-            rb.useGravity = true;
+            }*/
+            //rb.useGravity = true;
             if (Math.Abs(transform.position.y - groundY) < 3f) {
-                Debug.Log("Reenabled");
                 // Re-enable movement once enemy falls back to the ground
                 agent.enabled = true;
             }
