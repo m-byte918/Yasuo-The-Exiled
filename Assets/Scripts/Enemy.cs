@@ -129,7 +129,7 @@ public class Enemy : MonoBehaviour {
         // Don't snap back to ground until half a second passes
         snapToGroundIgnoreTime = Time.time + .5f;
 
-        //rb.velocity = new Vector3(0, 16f, 0);
-        rb.AddForce(transform.up * 32, ForceMode.VelocityChange);
+        rb.velocity = Vector3.zero;
+        rb.AddForce(transform.up * 12f, ForceMode.Impulse);
     }
 }
