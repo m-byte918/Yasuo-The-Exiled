@@ -110,11 +110,7 @@ public class Enemy : MonoBehaviour {
             // Unity waits until the next frame to remove the object from
             // tags, so having a seperate enemy count is necessary
             WaveManager wm = GameObject.Find("Waves").GetComponent<WaveManager>();
-
-            if (--wm.currentEnemyCount == 0) {
-                // Spawn next wave
-                //player.GetComponent<WaveManager>().spawnNextWave();
-            }
+            --wm.currentEnemyCount;
         }
     }
 

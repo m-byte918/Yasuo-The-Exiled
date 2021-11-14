@@ -6,13 +6,13 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemyPrefab;
     public Canvas playerHealthCanvas;
 
-    public float waveGrowthRate = 0.5f;
     public int currentEnemyCount = 0;
     private int currentWaveSize = 1;
     private int currentWave = 0;
 
     public void spawnNextWave() {
         ++currentWave;
+        ++currentWaveSize; // Scale wave by 1
 
         GameObject currentWaveTrigger = GameObject.Find("SpawnZone " + currentWave);
         GameObject nextWaveTrigger = GameObject.Find("SpawnZone " + (currentWave + 1));
@@ -21,19 +21,15 @@ public class WaveManager : MonoBehaviour {
             // No start or end of waves
             return;
         }
-        // Scale current wave size by predetermined factor
-        int nextWaveSize = ++currentWaveSize;
-
-        Debug.Log("Next Wave Size: " + nextWaveSize);
-
         // Enemy spawn bound
-        float minX = currentWaveTrigger.transform.position.x - currentWaveTrigger.transform.lossyScale.x / 2f;
-        float maxX = currentWaveTrigger.transform.position.x + currentWaveTrigger.transform.lossyScale.x / 2f;
-        float minZ = currentWaveTrigger.transform.position.z + currentWaveTrigger.transform.lossyScale.z / 2f;
-        float maxZ = currentWaveTrigger.transform.position.z - currentWaveTrigger.transform.lossyScale.z / 2f;
+        Transform cwtTransform = currentWaveTrigger.transform;
+        float minX = cwtTransform.position.x - cwtTransform.lossyScale.x / 2f;
+        float maxX = cwtTransform.position.x + cwtTransform.lossyScale.x / 2f;
+        float minZ = cwtTransform.position.z - cwtTransform.lossyScale.z / 2f;
+        float maxZ = cwtTransform.position.z + cwtTransform.lossyScale.z / 2f;
         float spawnY = GameObject.Find("Player").transform.position.y;
 
-        for (int i = 0; i < nextWaveSize; ++i) {
+        for (int i = 0; i < currentWaveSize; ++i) {
             // Choose random position within spawn bound
             float spawnX = Random.Range(minX, maxX);
             float spawnZ = Random.Range(minZ, maxZ);
@@ -43,6 +39,5 @@ public class WaveManager : MonoBehaviour {
             GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
             newEnemy.GetComponentInChildren<EnemyHealthSlider>().playerHealthCanvas = playerHealthCanvas;
         }
-        currentWaveSize = nextWaveSize;
     }
 }
