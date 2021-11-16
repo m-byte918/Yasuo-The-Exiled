@@ -34,8 +34,9 @@ public class Abilities : MonoBehaviour {
      */
 
     // Indicator images
-    public Canvas arrowIndicatorCanvas;
-    public Canvas circleIndicatorCanvas;
+    public Canvas qIndicatorCanvas;
+    public Canvas eIndicatorCanvas;
+    public Canvas rIndicatorCanvas;
 
     private float rotateVelocity;
     private float nextAutoAttackTime = 0f;
@@ -57,7 +58,8 @@ public class Abilities : MonoBehaviour {
     public AudioClip qOneAbilitySound, qThreeAbilitySound;
     public AudioClip qOneAbilityVoice, qThreeAbilityVoice;
 
-    private int qStackCounter = 1;
+    private int qStackCounter = 0;
+    private const int Q_MAX_STACK = 3;
     private float lastQTime = 0f;
 
     [Header("E Ability")]
@@ -81,8 +83,9 @@ public class Abilities : MonoBehaviour {
         eAbilityImg.fillAmount = 0f;
         rAbilityImg.fillAmount = 0f;
 
-        arrowIndicatorCanvas.enabled = false;
-        circleIndicatorCanvas.enabled = false;
+        qIndicatorCanvas.enabled = false;
+        eIndicatorCanvas.enabled = false;
+        rIndicatorCanvas.enabled = false;
 
         audioSourceSound = gameObject.GetComponent<AudioSource>();
         audioSourceVoice = gameObject.GetComponent<AudioSource>();
@@ -133,30 +136,46 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    void moveArrowIndicator() {
-        circleIndicatorCanvas.enabled = false;
+    void moveQIndicator() {
+        eIndicatorCanvas.enabled = false;
+        rIndicatorCanvas.enabled = false;
+        rotateIndicator(qIndicatorCanvas, 100f);
 
-        // Rotate indicator along y axis relative to mouse and player position
+        if (qStackCounter == Q_MAX_STACK - 1) {
+            // Whirlwind --> double the range
+            qIndicatorCanvas.transform.localScale = new Vector3(qLastRange, .002f, 1f);
+        } else {
+            // Normal
+            qIndicatorCanvas.transform.localScale = new Vector3(qRange, .002f, 1f);
+        }
+    }
+
+    void moveEIndicator() {
+        qIndicatorCanvas.enabled = false;
+        rIndicatorCanvas.enabled = false;
+        rotateIndicator(eIndicatorCanvas, 370f);
+    }
+
+    void moveRIndicator() {
+        qIndicatorCanvas.enabled = false;
+        eIndicatorCanvas.enabled = false;
+        rotateIndicator(rIndicatorCanvas, 370f);
+    }
+
+    void rotateIndicator(Canvas canvas, float offset) {
+        // Get rotation along y axis relative to mouse and player position
         Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
         pos = Input.mousePosition - pos;
         float angle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
 
-        if (qStackCounter == 3) {
-            // Whirlwind --> double the range
-            arrowIndicatorCanvas.transform.localScale = new Vector3(qLastRange, .002f, 1f);
-        } else {
-            // Normal
-            arrowIndicatorCanvas.transform.localScale = new Vector3(qRange, .002f, 1f);
-        }
-        arrowIndicatorCanvas.transform.rotation = Quaternion.Euler(0f, 100f - angle, 0f);
+        // Enable + rotate it
+        canvas.enabled = true;
+        canvas.transform.rotation = Quaternion.Euler(0f, offset - angle, 0f);
     }
 
     void stab(float damage) {
-        /**
-         * Play stab animation here
-        **/
         // Stab attack
-        Transform b = arrowIndicatorCanvas.transform.GetChild(1);
+        Transform b = qIndicatorCanvas.transform.GetChild(1);
         RaycastHit[] hits = Physics.BoxCastAll(b.position, b.lossyScale / 2f, transform.forward, b.rotation, 4f);
         foreach (RaycastHit h in hits) {
             if (h.transform.CompareTag("Enemy"))
@@ -165,7 +184,7 @@ public class Abilities : MonoBehaviour {
     }
     
     void qAttack() {
-        if (qStackCounter < 3) {
+        if (qStackCounter < Q_MAX_STACK - 1) {
             stab(25);
             // <play jab sound>
             audioSourceSound.PlayOneShot(qOneAbilitySound);
@@ -179,12 +198,22 @@ public class Abilities : MonoBehaviour {
         }
     }
 
+    void eAttack() {
+        // <program cone thingy>
+        circleAttack();
+    }
+
+    void rAttack() {
+        // <program four whirlwind thingy>
+        circleAttack();
+    }
+
     void circleAttack() {
-        Collider[] collisions = Physics.OverlapSphere(transform.position, 8f * circleIndicatorCanvas.transform.localScale.z);
+        Collider[] collisions = Physics.OverlapSphere(transform.position, 8f);
 
         foreach (Collider c in collisions) {
             if (c.CompareTag("Enemy"))
-                c.GetComponent<Enemy>().takeDamage(20 * circleIndicatorCanvas.transform.localScale.z);
+                c.GetComponent<Enemy>().takeDamage(20);
         }
     }
 
@@ -196,60 +225,65 @@ public class Abilities : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.Q)) {
             // Q is no longer being pressed, start the cooldown.
             qAbilityImg.fillAmount = 1f;
-            arrowIndicatorCanvas.enabled = false;
+            qIndicatorCanvas.enabled = false;
             qAttack();
 
             if (lastQTime % 60f < qStackCooldown) {
-                // Only stack if last Q time was less than 6 seconds
-                if (++qStackCounter > 3)
-                    qStackCounter = 1; // Max 3 stacks
+                // Only stack if last Q time was less than the cooldown
+                if (++qStackCounter == Q_MAX_STACK)
+                    qStackCounter = 0; // Reset
             } else {
                 // Otherwise, reset
                 qStackCounter = 1;
             }
             lastQTime = 0;
         } else if (Input.GetKey(KeyCode.Q)) {
-            // Q is being held down, move the arrow indicator but do not start the cooldown
-            arrowIndicatorCanvas.enabled = true;
-            moveArrowIndicator();
+            // Q is being held down, move the indicator but do not start the cooldown
+            moveQIndicator();
         }
     }
 
     void eAbility() {
-        if (!fillImage(eAbilityImg, eCooldown))
-            updateCircleAbility(KeyCode.E, eAbilityImg, eRangeX, eRangeZ);
+        if (fillImage(eAbilityImg, eCooldown)) {
+            return;
+        }
+        if (Input.GetKeyUp(KeyCode.E)) {
+            // E is no longer being pressed, disable the indicator and start cooldown
+            eAbilityImg.fillAmount = 1f;
+            eIndicatorCanvas.enabled = false;
+
+            // Play E sound
+            audioSourceVoice.PlayOneShot(eAbilityVoice);
+            audioSourceSound.PlayOneShot(eAbilitySound);
+
+            // Set animation state and deal damage
+            StartCoroutine(eAbilityAnimation());
+            eAttack();
+        } else if (Input.GetKey(KeyCode.E)) {
+            // E is being held down, move the indicator but do not start the cooldown
+            moveEIndicator();
+        }
     }
 
     void rAbility() {
-        if (!fillImage(rAbilityImg, rCooldown))
-            updateCircleAbility(KeyCode.R, rAbilityImg, rRangeX, rRangeZ);
-    }
+        if (fillImage(rAbilityImg, rCooldown)) {
+            return;
+        }
+        if (Input.GetKeyUp(KeyCode.R)) {
+            // R is no longer being pressed, disable the indicator and start cooldown
+            rAbilityImg.fillAmount = 1f;
+            rIndicatorCanvas.enabled = false;
 
-    void updateCircleAbility(KeyCode code, Image abilityImg, float rx, float rz) {
-        if (Input.GetKeyUp(code)) {
-            // Key is no longer being pressed, start the cooldown.
-            abilityImg.fillAmount = 1f;
-            circleIndicatorCanvas.enabled = false;
-
+            // Play R sound
+            audioSourceVoice.PlayOneShot(rAbilityVoice);
+            audioSourceSound.PlayOneShot(rAbilitySound);
             
-            // Play attack audio
-            if (code == KeyCode.E) {
-                audioSourceVoice.PlayOneShot(eAbilityVoice);
-                audioSourceSound.PlayOneShot(eAbilitySound);
-                // set animation state
-                StartCoroutine(eAbilityAnimation());
-            } else {
-                audioSourceVoice.PlayOneShot(rAbilityVoice);
-                audioSourceSound.PlayOneShot(rAbilitySound);
-                // set animation state
-                StartCoroutine(rAbilityAnimation());
-            }
-            circleAttack();
-        } else if (Input.GetKey(code)) {
-            // Key is being held down
-            circleIndicatorCanvas.transform.localScale = new Vector3(rx, .002f, rz);
-            circleIndicatorCanvas.enabled = true;
-            arrowIndicatorCanvas.enabled = false;
+            // Set animation state and deal damage
+            StartCoroutine(rAbilityAnimation());
+            rAttack();
+        } else if (Input.GetKey(KeyCode.R)) {
+            // R is being held down, move the indicator but do not start the cooldown
+            moveRIndicator();
         }
     }
 

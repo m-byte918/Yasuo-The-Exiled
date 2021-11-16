@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
         coinCountText = GameObject.Find("Wallet").GetComponent<Text>();
+        //groundY = transform.position.y;
         Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>());
 
         // Prevent auto hit at the start of the game
@@ -73,6 +74,11 @@ public class Enemy : MonoBehaviour {
         // Look at the player and move toward them
         transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
         agent.SetDestination(player.transform.position);
+        
+        /*if (transform.position.y < groundY - transform.lossyScale.y) {
+            // If fell through the ground for some reason, suicide
+            takeDamage(100);
+        }*/
     }
 
     void Update() {
