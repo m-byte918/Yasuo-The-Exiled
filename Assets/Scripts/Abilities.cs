@@ -65,7 +65,7 @@ public class Abilities : MonoBehaviour {
     [Header("E Ability")]
     public float eRangeX = .002f;
     public float eRangeZ = 1f;
-    public float eCooldown = 0.5f;
+    public float eCooldown = 1.5f;
     public Image eAbilityImg;
     public AudioClip eAbilitySound;
     public AudioClip eAbilityVoice;
@@ -199,8 +199,11 @@ public class Abilities : MonoBehaviour {
     }
 
     void eAttack() {
-        // <program cone thingy>
-        circleAttack();
+        List<Collider> collisions = eIndicatorCanvas.transform.GetChild(1).GetComponent<OnConeCollision>().currentCollisions;
+
+        foreach (Collider c in collisions) {
+            c.GetComponent<Enemy>().takeDamage(100);
+        }
     }
 
     void rAttack() {
@@ -213,7 +216,7 @@ public class Abilities : MonoBehaviour {
 
         foreach (Collider c in collisions) {
             if (c.CompareTag("Enemy"))
-                c.GetComponent<Enemy>().takeDamage(20);
+                c.GetComponent<Enemy>().takeDamage(50);
         }
     }
 
@@ -301,20 +304,20 @@ public class Abilities : MonoBehaviour {
     IEnumerator qAbilityAnimation()
     {
         anim.SetBool("QAttack", true);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(qCooldown);
         anim.SetBool("QAttack", false);
     }
 
     IEnumerator eAbilityAnimation()
     {
         anim.SetBool("EAttack", true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(eCooldown);
         anim.SetBool("EAttack", false);
     }
     IEnumerator rAbilityAnimation()
     {
         anim.SetBool("RAttack", true);
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(rCooldown);
         anim.SetBool("RAttack", false);
     }
 }

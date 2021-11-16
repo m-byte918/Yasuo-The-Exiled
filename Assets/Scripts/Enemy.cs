@@ -62,11 +62,11 @@ public class Enemy : MonoBehaviour {
         }
         // Stop enemy if it gets too close or too far from player
         agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
-        anim.SetBool("isWalking", !agent.isStopped);
+        //anim.SetBool("isWalking", !agent.isStopped);
 
         // Auto attack the player
         bool isAttacking = Time.time >= nextAutoAttackTime && agent.remainingDistance <= 3f;
-        anim.SetBool("isAttacking", isAttacking);
+        //anim.SetBool("isAttacking", isAttacking);
         if (isAttacking) {
             GameObject.Find("2D Health Slider").GetComponent<Health>().takeDamage(autoAttackDamage);
             nextAutoAttackTime = Time.time + autoAttackDuration;
