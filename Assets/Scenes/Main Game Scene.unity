@@ -20261,7 +20261,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 16
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 48
@@ -20271,7 +20271,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Hey there, adventurer! '
+  m_Text: "Hey there, adventurer! \nWelcome to your life in exile.\nTo reachieve
+    your former glory and fame as the adventurer that you once were, you'll need
+    to complete a conquest of several enemies!\nThese enemies come in 10 waves, each
+    wave bringing with it more enemies with increasing difficulty. On completion
+    of the tenth wave of enemies, you'll be transported to fight the enemy that took
+    your fame and glory.\nWin and become greater than you were.\nLose..and you'll
+    pay the price. "
 --- !u!222 &1585824040
 CanvasRenderer:
   m_ObjectHideFlags: 0
