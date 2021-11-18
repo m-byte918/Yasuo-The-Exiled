@@ -189,11 +189,11 @@ public class Abilities : MonoBehaviour {
             // <play jab sound>
             audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
-            StartCoroutine(qAbilityAnimation());
+            StartCoroutine(abilityAnimation('Q', qCooldown));
         } else {
             // Whirlwind attack
             audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
-            StartCoroutine(qAbilityAnimation());
+            StartCoroutine(abilityAnimation('Q', qCooldown));
             GetComponent<Whirlwind>().launch();
         }
     }
@@ -202,7 +202,8 @@ public class Abilities : MonoBehaviour {
         List<Collider> collisions = eIndicatorCanvas.transform.GetChild(1).GetComponent<OnConeCollision>().currentCollisions;
 
         foreach (Collider c in collisions) {
-            c.GetComponent<Enemy>().takeDamage(100);
+            if (c != null)
+                c.GetComponent<Enemy>().takeDamage(100);
         }
     }
 
@@ -260,7 +261,7 @@ public class Abilities : MonoBehaviour {
             audioSourceSound.PlayOneShot(eAbilitySound);
 
             // Set animation state and deal damage
-            StartCoroutine(eAbilityAnimation());
+            StartCoroutine(abilityAnimation('E', eCooldown));
             eAttack();
         } else if (Input.GetKey(KeyCode.E)) {
             // E is being held down, move the indicator but do not start the cooldown
@@ -282,7 +283,7 @@ public class Abilities : MonoBehaviour {
             audioSourceSound.PlayOneShot(rAbilitySound);
             
             // Set animation state and deal damage
-            StartCoroutine(rAbilityAnimation());
+            StartCoroutine(abilityAnimation('R', rCooldown));
             rAttack();
         } else if (Input.GetKey(KeyCode.R)) {
             // R is being held down, move the indicator but do not start the cooldown
@@ -301,23 +302,9 @@ public class Abilities : MonoBehaviour {
         return true;
     }
 
-    IEnumerator qAbilityAnimation()
-    {
-        anim.SetBool("QAttack", true);
-        yield return new WaitForSeconds(qCooldown);
-        anim.SetBool("QAttack", false);
-    }
-
-    IEnumerator eAbilityAnimation()
-    {
-        anim.SetBool("EAttack", true);
-        yield return new WaitForSeconds(eCooldown);
-        anim.SetBool("EAttack", false);
-    }
-    IEnumerator rAbilityAnimation()
-    {
-        anim.SetBool("RAttack", true);
-        yield return new WaitForSeconds(rCooldown);
-        anim.SetBool("RAttack", false);
+    IEnumerator abilityAnimation(char which, float cooldown) {
+        anim.SetBool(which + "Attack", true);
+        yield return new WaitForSeconds(cooldown);
+        anim.SetBool(which + "Attack", false);
     }
 }

@@ -103,7 +103,8 @@ public class Enemy : MonoBehaviour {
                 agent.isStopped = true;
                 agent.enabled = false;
             }
-            Destroy(gameObject);
+            if (gameObject != null)
+                Destroy(gameObject);
 
             // Spawn a coin
             //Instantiate(coinPrefab, transform.position, transform.rotation);
