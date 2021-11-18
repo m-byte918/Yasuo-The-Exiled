@@ -52,7 +52,7 @@ public class Abilities : MonoBehaviour {
     [Header("Q Ability")]
     public float qRange = .002f;
     public float qLastRange = .004f;
-    public float qCooldown = 2f;
+    private float qCooldown = 2f;
     public float qStackCooldown = 4f;
     public Image qAbilityImg;
     public AudioClip qOneAbilitySound, qThreeAbilitySound;
@@ -63,17 +63,13 @@ public class Abilities : MonoBehaviour {
     private float lastQTime = 0f;
 
     [Header("E Ability")]
-    public float eRangeX = .002f;
-    public float eRangeZ = 1f;
-    public float eCooldown = 1.5f;
+    private float eCooldown = 0.5f;
     public Image eAbilityImg;
     public AudioClip eAbilitySound;
     public AudioClip eAbilityVoice;
 
     [Header("R Ability")]
-    public float rRangeX = .004f;
-    public float rRangeZ = 2f;
-    public float rCooldown = 30f;
+    private float rCooldown = 30f;
     public Image rAbilityImg;
     public AudioClip rAbilitySound;
     public AudioClip rAbilityVoice;

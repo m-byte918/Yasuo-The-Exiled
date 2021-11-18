@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Whirlwind : MonoBehaviour {
     public GameObject whirlwind;
     public GameObject arrowCollider;
+    public GameObject whirlwindPrefab;
     //public AudioSource whirlwindSound;
-    private float speed = 40f;
+    private float speed = 40f; // Speed for all whirlwinds
     Vector3 direction; // Direction whirlwind will launch
+    List<whirlwindData> wData = new List<whirlwindData>();
+
+    struct whirlwindData {
+        GameObject whirlwind;
+        Vector3 velocity;
+    };
 
     public void launch() {
         // Play sound
         //whirlwindSound.Play();
+
+        //wData.Add(new whirlwindData())
 
         // Make visible
         whirlwind.SetActive(true);
