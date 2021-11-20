@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour {
     Rigidbody rb;
@@ -13,6 +15,11 @@ public class Enemy : MonoBehaviour {
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
 
+    //Game End Things
+    public GameObject Fade;
+    private Scene currentScene;
+    String sceneName;
+
     public Text coinCountText;
 
     // Auto attack
@@ -21,6 +28,8 @@ public class Enemy : MonoBehaviour {
     public float autoAttackDamage = 20f;
 
     void Start() {
+        currentScene = SceneManager.GetActiveScene();
+        sceneName = currentScene.name;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
@@ -104,8 +113,15 @@ public class Enemy : MonoBehaviour {
                 agent.enabled = false;
             }
             if (gameObject != null)
-                Destroy(gameObject);
-
+                if (sceneName == "Boss Scene")
+                {
+                    Fade.SetActive(true);
+                    StartCoroutine(WaitForSceneLoad());
+                }
+                else
+                { 
+                    Destroy(gameObject);
+                }
             // Spawn a coin
             //Instantiate(coinPrefab, transform.position, transform.rotation);
 
@@ -135,4 +151,11 @@ public class Enemy : MonoBehaviour {
         rb.velocity = Vector3.zero;
         rb.AddForce(transform.up * 12f, ForceMode.Impulse);
     }
+
+    private IEnumerator WaitForSceneLoad()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene(0);
+    }
 }
+

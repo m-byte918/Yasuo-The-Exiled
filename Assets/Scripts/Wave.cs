@@ -14,7 +14,10 @@ public class Wave : MonoBehaviour {
             return;
         }
         // Disable collision with inner collider
-        GetComponents<Collider>()[0].isTrigger = true;
+        if (wm.currentEnemyCount.Equals(0))
+        {
+            GetComponents<Collider>()[0].isTrigger = true;
+        }
 
         // Spawn next wave
         wm.spawnNextWave();
