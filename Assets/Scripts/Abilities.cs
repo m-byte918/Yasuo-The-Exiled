@@ -185,11 +185,11 @@ public class Abilities : MonoBehaviour {
             // <play jab sound>
             audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
-            StartCoroutine(abilityAnimation('Q', qCooldown));
+            StartCoroutine(abilityAnimation('Q', 1.0f));
         } else {
             // Whirlwind attack
             audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
-            StartCoroutine(abilityAnimation('Q', qCooldown));
+            StartCoroutine(abilityAnimation('Q', 1.0f));
             GetComponent<Whirlwind>().launch();
         }
     }
@@ -257,7 +257,7 @@ public class Abilities : MonoBehaviour {
             audioSourceSound.PlayOneShot(eAbilitySound);
 
             // Set animation state and deal damage
-            StartCoroutine(abilityAnimation('E', eCooldown));
+            StartCoroutine(abilityAnimation('E', 0.5f));
             eAttack();
         } else if (Input.GetKey(KeyCode.E)) {
             // E is being held down, move the indicator but do not start the cooldown
@@ -279,7 +279,7 @@ public class Abilities : MonoBehaviour {
             audioSourceSound.PlayOneShot(rAbilitySound);
             
             // Set animation state and deal damage
-            StartCoroutine(abilityAnimation('R', rCooldown));
+            StartCoroutine(abilityAnimation('R', 1.2f));
             rAttack();
         } else if (Input.GetKey(KeyCode.R)) {
             // R is being held down, move the indicator but do not start the cooldown
