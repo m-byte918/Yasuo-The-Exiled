@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2003931976}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -20143,8 +20143,8 @@ MonoBehaviour:
     wave bringing with it more enemies with increasing difficulty.\nYou won't be
     able to pass the next wave until you defeat the wave that you're on, remember
     that.\nOn completion of the tenth wave of enemies, you'll be transported to fight
-    the enemy that took your fame and glory.\nWin and become greater than you were.\nLose..and
-    you'll pay the price. "
+    the enemy boss that took your fame and glory.\nWin and become greater than you
+    were.\nLose..and you'll pay the price. "
 --- !u!222 &1585824040
 CanvasRenderer:
   m_ObjectHideFlags: 0
