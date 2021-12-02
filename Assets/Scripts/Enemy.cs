@@ -98,12 +98,17 @@ public class Enemy : MonoBehaviour {
     }
 
     public void takeDamage(float value) {
+
         // Flash red
         GetComponent<Renderer>().material.color = new Color(255, 0, 0);
         colorHoldTime = Time.time + .4f; // Hold for 0.4 seconds
 
         // Reduce health
         Slider health = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        if (health.value <=  0f) {
+            // Don't kill enemy twice
+            return;
+        }
         health.value -= value;
 
         if (health.value <= 0f) {

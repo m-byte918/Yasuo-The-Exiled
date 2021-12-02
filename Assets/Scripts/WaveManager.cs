@@ -7,7 +7,7 @@ public class WaveManager : MonoBehaviour {
     public Canvas playerHealthCanvas;
 
     public int currentEnemyCount = 0;
-    private int currentWaveSize = 1;
+    public int currentWaveSize = 0;
     private int currentWave = 0;
 
     public void spawnNextWave() {
