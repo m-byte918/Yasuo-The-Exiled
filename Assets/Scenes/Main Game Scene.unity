@@ -11615,6 +11615,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3843478951585104509, guid: 7bf201eb93a64ab47857ce81b796a258,
+        type: 3}
+      propertyPath: coinCountText
+      value: 
+      objectReference: {fileID: 1338590816}
     - target: {fileID: 5930651934207234998, guid: 7bf201eb93a64ab47857ce81b796a258,
         type: 3}
       propertyPath: m_Enabled
