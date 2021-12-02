@@ -20,8 +20,6 @@ public class Enemy : MonoBehaviour {
     private Scene currentScene;
     String sceneName;
 
-    public Text coinCountText;
-
     // Auto attack
     private float nextAutoAttackTime = 0f;
     public float autoAttackDuration = 2f; // seconds
@@ -34,7 +32,6 @@ public class Enemy : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
-        coinCountText = GameObject.Find("Wallet").GetComponent<Text>();
         //groundY = transform.position.y;
         Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>());
 
@@ -133,7 +130,6 @@ public class Enemy : MonoBehaviour {
             // Increment coin count and set text accordingly
             PlayerStats stats = player.GetComponent<PlayerStats>();
             stats.setCoinCount(stats.getCoinCount() + 10);
-            coinCountText.text = "Coins: " + stats.getCoinCount();
 
             // Unity waits until the next frame to remove the object from
             // tags, so having a seperate enemy count is necessary
