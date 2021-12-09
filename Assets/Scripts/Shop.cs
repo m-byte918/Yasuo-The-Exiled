@@ -26,11 +26,34 @@ public class Shop : MonoBehaviour {
         }
     }
 
+    void onPotionPurchase() {
+        // Add to inventory
+        Debug.Log("Potion purchased");
+    }
+
+    void onSwordPurchase() {
+        // Add to inventory
+        Debug.Log("Sword purchased");
+    }
+
+    void onShieldPurchase() {
+        // Add to inventory
+        Debug.Log("Shield purchased");
+    }
+
     void ButtonHandler(int price) {
         if (stats.getCoinCount() < price) {
             return; // Broke lmao
         }
-        // Subtract price from the wallet and add item to inventory
+        // Subtract price from the wallet
         stats.setCoinCount(stats.getCoinCount() - price);
+
+        // Custom item actions
+        // Hardcoding these for now
+        switch (price) {
+            case 50: onPotionPurchase(); break;
+            case 100: onSwordPurchase(); break;
+            case 150: onShieldPurchase(); break;
+        }
     }
 }
