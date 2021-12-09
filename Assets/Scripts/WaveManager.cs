@@ -6,6 +6,14 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemyPrefab;
     public Canvas playerHealthCanvas;
 
+    private const float LIN_HEALTH_GOWTH_RATE = 25;
+    private const float LIN_DAMAGE_GROWTH_RATE = 5f;
+
+    // First enemy is hidden so waves start at #2. Subtract from 
+    // base values so wave #2 starts at the base difficulty
+    private float currentWaveHealth = 150f - LIN_HEALTH_GOWTH_RATE;
+    private float currentWaveDamage = 20f - LIN_DAMAGE_GROWTH_RATE;
+
     public int currentEnemyCount = 0;
     public int currentWaveSize = 0;
     private int currentWave = 0;
@@ -13,6 +21,8 @@ public class WaveManager : MonoBehaviour {
     public void spawnNextWave() {
         ++currentWave;
         ++currentWaveSize; // Scale wave by 1
+        currentWaveHealth += LIN_HEALTH_GOWTH_RATE;
+        currentWaveDamage += LIN_DAMAGE_GROWTH_RATE;
 
         GameObject currentWaveTrigger = GameObject.Find("SpawnZone " + currentWave);
         GameObject nextWaveTrigger = GameObject.Find("SpawnZone " + (currentWave + 1));
@@ -38,6 +48,11 @@ public class WaveManager : MonoBehaviour {
             // Spawn new enemy
             GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
             newEnemy.GetComponentInChildren<EnemyHealthSlider>().playerHealthCanvas = playerHealthCanvas;
+
+            // Increment stats
+            Enemy stats = newEnemy.GetComponent<Enemy>();
+            stats.setHealth(currentWaveHealth);
+            stats.autoAttackDamage = currentWaveDamage;
         }
     }
 }

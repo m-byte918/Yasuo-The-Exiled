@@ -28134,6 +28134,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 966524101505073459, guid: 1a434f2485fcbd845ad7292ba9ed2d32,
+        type: 3}
+      propertyPath: m_Value
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 966524102061557719, guid: 1a434f2485fcbd845ad7292ba9ed2d32,
         type: 3}
       propertyPath: playerHealthCanvas

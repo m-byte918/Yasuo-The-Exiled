@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour {
     float snapToGroundIgnoreTime = 0f;
     float groundY = 0f;
 
-    //Game End Things
+    // Game End Things
     public GameObject Fade;
     private Scene currentScene;
     String sceneName;
@@ -66,12 +66,14 @@ public class Enemy : MonoBehaviour {
             }
             return; // Don't move while airborne
         }
+        float dist = agent.pathPending ? Vector3.Distance(transform.position, player.transform.position) : agent.remainingDistance;
+
         // Stop enemy if it gets too close or too far from player
-        agent.isStopped = agent.remainingDistance <= 3f || agent.remainingDistance >= 15f;
+        agent.isStopped = dist <= 3f || dist >= 15f;
         //anim.SetBool("isWalking", !agent.isStopped);
 
         // Auto attack the player
-        bool isAttacking = Time.time >= nextAutoAttackTime && agent.remainingDistance <= 3f;
+        bool isAttacking = Time.time >= nextAutoAttackTime && dist <= 3f;
         //anim.SetBool("isAttacking", isAttacking);
         if (isAttacking) {
             GameObject.Find("2D Health Slider").GetComponent<Health>().takeDamage(autoAttackDamage);
@@ -94,8 +96,13 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    public void takeDamage(float value) {
+    public void setHealth(float h) {
+        Slider health = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        health.maxValue = h;
+        health.value = h;
+    }
 
+    public void takeDamage(float value) {
         // Flash red
         GetComponent<Renderer>().material.color = new Color(255, 0, 0);
         colorHoldTime = Time.time + .4f; // Hold for 0.4 seconds
@@ -114,16 +121,14 @@ public class Enemy : MonoBehaviour {
                 agent.isStopped = true;
                 agent.enabled = false;
             }
-            if (gameObject != null)
-                if (sceneName == "Boss Scene")
-                {
+            if (gameObject != null) {
+                if (sceneName == "Boss Scene") {
                     Fade.SetActive(true);
                     StartCoroutine(WaitForSceneLoad());
-                }
-                else
-                { 
+                } else {
                     Destroy(gameObject);
                 }
+            }
             // Spawn a coin
             //Instantiate(coinPrefab, transform.position, transform.rotation);
 
