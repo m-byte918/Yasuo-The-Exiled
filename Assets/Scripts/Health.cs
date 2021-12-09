@@ -24,7 +24,7 @@ public class Health : MonoBehaviour {
 
         if (health <= 0f) {
             // Game over
-            SceneManager.LoadScene("Title Screen");
+            SceneManager.LoadScene("Gameover Screen");
         }
     }
 }
