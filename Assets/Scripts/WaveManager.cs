@@ -6,7 +6,7 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemyPrefab;
     public Canvas playerHealthCanvas;
 
-    private const float LIN_HEALTH_GOWTH_RATE = 25;
+    private const float LIN_HEALTH_GOWTH_RATE = 50;
     private const float LIN_DAMAGE_GROWTH_RATE = 5f;
 
     // First enemy is hidden so waves start at #2. Subtract from 
