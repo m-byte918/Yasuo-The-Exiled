@@ -11,16 +11,20 @@ public class Whirlwind : MonoBehaviour {
     Vector3 direction; // Direction whirlwind will launch
     List<whirlwindData> wData = new List<whirlwindData>();
 
+    public float damage = 50f;
+
     struct whirlwindData {
         GameObject whirlwind;
         Vector3 velocity;
     };
 
-    public void launch() {
+    public void launch(float dmg) {
         // Play sound
         //whirlwindSound.Play();
 
         //wData.Add(new whirlwindData())
+
+        damage = dmg;
 
         // Make visible
         whirlwind.SetActive(true);

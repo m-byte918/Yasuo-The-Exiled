@@ -50,6 +50,8 @@ public class Abilities : MonoBehaviour {
     private AudioSource audioSourceVoice;
 
     [Header("Q Ability")]
+    public float qDamage = 25f;
+    public float qLastDamage = 50f;
     public float qRange = .002f;
     public float qLastRange = .004f;
     private float qCooldown = 2f;
@@ -63,12 +65,14 @@ public class Abilities : MonoBehaviour {
     private float lastQTime = 0f;
 
     [Header("E Ability")]
+    public float eDamage = 100f;
     private float eCooldown = 0.5f;
     public Image eAbilityImg;
     public AudioClip eAbilitySound;
     public AudioClip eAbilityVoice;
 
     [Header("R Ability")]
+    public float rDamage = 200f;
     private float rCooldown = 30f;
     public Image rAbilityImg;
     public AudioClip rAbilitySound;
@@ -181,7 +185,7 @@ public class Abilities : MonoBehaviour {
     
     void qAttack() {
         if (qStackCounter < Q_MAX_STACK - 1) {
-            stab(25);
+            stab(qDamage);
             // <play jab sound>
             audioSourceSound.PlayOneShot(qOneAbilitySound);
             audioSourceVoice.PlayOneShot(qOneAbilityVoice);
@@ -190,7 +194,7 @@ public class Abilities : MonoBehaviour {
             // Whirlwind attack
             audioSourceVoice.PlayOneShot(qThreeAbilityVoice);
             StartCoroutine(abilityAnimation('Q', 1.0f));
-            GetComponent<Whirlwind>().launch();
+            GetComponent<Whirlwind>().launch(qLastDamage);
         }
     }
 
@@ -199,7 +203,7 @@ public class Abilities : MonoBehaviour {
 
         foreach (Collider c in collisions) {
             if (c != null)
-                c.GetComponent<Enemy>().takeDamage(100);
+                c.GetComponent<Enemy>().takeDamage(eDamage);
         }
     }
 
@@ -213,7 +217,7 @@ public class Abilities : MonoBehaviour {
 
         foreach (Collider c in collisions) {
             if (c.CompareTag("Enemy"))
-                c.GetComponent<Enemy>().takeDamage(50);
+                c.GetComponent<Enemy>().takeDamage(rDamage);
         }
     }
 

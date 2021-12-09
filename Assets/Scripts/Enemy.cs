@@ -147,7 +147,7 @@ public class Enemy : MonoBehaviour {
         if (other.name != "Whirlwind") {
             return;
         }
-        takeDamage(50);
+        takeDamage(other.GetComponent<Whirlwind>().damage);
         agent.enabled = false;
         groundY = transform.position.y;
 
